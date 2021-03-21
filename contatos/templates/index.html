@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lista de Contatos</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="{{
+        url_for('static', filename='css/bootstrap.css')
+    }}">
+
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+
+</head>
+<body>
+<!--CONTAINER-->
+<div class="container">
+
+<!--NAVBAR-->
+<nav class="navbar navbar-light bg-light">
+
+    <a class="navbar-brand" href="{{ url_for('index')}}">
+        <i class="bi bi-people" style="font-size:35px; color: rgb(175, 175, 175);"></i>
+        <i style="font-size:25px; color: rgb(175, 175, 175);">&nbsp;&nbsp;&nbsp;Lista de Contato</i>
+    </a>
+
+    <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#insert"> Novo Contato </button>
+</nav>
+
+<BR><BR>
+<!--END NAVBAR-->
+
+<!--FLASH-->
+<div class="row">
+    <div class="col align-self-center">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert"> 
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    </div>
+</div>
+<!--END FLASH-->
+
+<!--CADATRO-->
+<div class="modal fade" id="insert" tabindex="-1" role="dialog" aria-labelledby="insert" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<!--FORMCADASTRO-->
+<form action="{{ url_for('addcontato') }}" method="POST">
+{{ form.csrf_token }}
+
+    <div class="modal-header bg-light text-dark">
+        <h4 class="modal-title" id="insert">
+            <i class="bi bi-person-plus" style="font-size: 2rem;"></i>
+            &nbsp;&nbsp;&nbsp;ADICIONAR CONTATO
+        </h4>
+        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+    </div>
+
+    <div class="modal-body bg-white text-dark">
+            
+        <div class="row">    
+            <div class="col-sm-2 form-group">
+                <label for="Nome">{{ form.nome.label }}</label>
+            </div>
+            <div class="col-sm-10 form-group">
+                {{ form.nome(size=30) }}
+            </div>
+        </div>
+
+        <div class="row">    
+            <div class="col-sm-2 form-group">
+                <label for="Telefone">{{ form.telefone.label }}</label>
+            </div>
+            <div class="col-sm-10 form-group">
+                {{ form.telefone(size=30) }}
+            </div>
+        </div>
+            
+    </div>
+
+    <div class="modal-footer bg-light text-dark">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-success">Salvar</button>
+    </div>
+
+</form>
+<!--END FORMCADASTRO-->
+</div>
+</div>
+</div>
+<!--END CADATRO-->
+
+<!--LISTARCONTATOS-->
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col" style="width: 40%;">Nome</th>
+            <th scope="col" style="width: 40%;">Telefone</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contatos in contatos %}
+        <tr>
+            <td>{{ contatos.nome }}</td>
+            <td>{{ contatos.telefone }}</td>
+            <td>
+                <a href="{{ url_for('upcontato', id=contatos.id) }}">
+                    <button type="submit" class="btn btn-sm btn-outline-info">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </a>
+            </td>
+            <td>
+                <form action="{{ url_for('delcontato', id=contatos.id) }}" method="POST">
+                    {{ form.csrf_token }}
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+<!--END LISTARCONTATOS-->
+    
+</div>
+<!--END CONTAINER-->
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
